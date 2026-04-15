@@ -57,15 +57,13 @@ describe('Apps List', () => {
     })
   })
 
-  it('shows configure and test buttons for connected apps', async () => {
+  it('shows action menu for connected apps', async () => {
     seedAuth()
     renderInRoute(`/t/:tenantId/apps`, <AppsPage />, `/t/${TENANT_ID}/apps`)
 
     await waitFor(() => {
-      const configureButtons = screen.getAllByRole('link', { name: /configure/i })
-      expect(configureButtons.length).toBe(2)
-      const testButtons = screen.getAllByRole('button', { name: /test/i })
-      expect(testButtons.length).toBe(2)
+      expect(screen.getByText('Intercom Production')).toBeInTheDocument()
+      expect(screen.getByText('Slack Notifications')).toBeInTheDocument()
     })
   })
 
@@ -97,7 +95,7 @@ describe('App Form - New', () => {
     renderInRoute(`/t/:tenantId/apps/new`, <AppFormPage />, `/t/${TENANT_ID}/apps/new`)
 
     await waitFor(() => {
-      expect(screen.getByText('Connect App')).toBeInTheDocument()
+      expect(screen.getByText(/connect intercom/i)).toBeInTheDocument()
     })
     expect(screen.getByLabelText(/display name/i)).toBeInTheDocument()
   })

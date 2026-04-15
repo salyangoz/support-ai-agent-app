@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { Plus, Pencil, Trash2, Zap, Loader2, Sparkles } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -199,15 +200,18 @@ export default function KnowledgeBasePage() {
                           >
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              if (confirm('Delete this article?')) deleteMutation.mutate(article.id)
-                            }}
+                          <ConfirmDialog
+                            title="Delete article?"
+                            message={`"${article.title}" will be permanently deleted.`}
+                            confirmLabel="Delete"
+                            onConfirm={() => deleteMutation.mutate(article.id)}
                           >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
+                            {(open) => (
+                              <Button variant="ghost" size="icon" onClick={open}>
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            )}
+                          </ConfirmDialog>
                         </div>
                       </td>
                     </tr>

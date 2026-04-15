@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { Plus, Trash2 } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -157,15 +158,18 @@ export default function UsersPage() {
                   {activeRole === 'owner' && (
                     <td className="px-4 py-3 text-right">
                       {tu.role !== 'owner' && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            if (confirm('Remove this user?')) deleteMutation.mutate(tu.user_id)
-                          }}
+                        <ConfirmDialog
+                          title="Remove user?"
+                          message={`${tu.user?.name ?? tu.user?.email ?? 'This user'} will lose access to this tenant.`}
+                          confirmLabel="Remove"
+                          onConfirm={() => deleteMutation.mutate(tu.user_id)}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
+                          {(open) => (
+                            <Button variant="ghost" size="icon" onClick={open}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          )}
+                        </ConfirmDialog>
                       )}
                     </td>
                   )}

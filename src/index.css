@@ -98,6 +98,15 @@ body {
   border-color: var(--color-border);
 }
 
+/* Slide-in animation */
+@keyframes slide-in-from-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.animate-in.slide-in-from-right {
+  animation: slide-in-from-right 0.2s ease-out;
+}
+
 /* Focus glow — Yengec blue */
 .focus-glow:focus-visible {
   box-shadow: 0 0 0 3px rgba(9, 111, 160, 0.2);

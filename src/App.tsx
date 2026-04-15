@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from '@/context/auth-context'
+import { ToastProvider } from '@/components/ui/toast'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Spinner } from '@/components/ui/spinner'
 import LoginPage from '@/pages/auth/login'
@@ -97,6 +98,7 @@ function AuthenticatedRoute({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ToastProvider>
       <BrowserRouter>
         <AuthProvider>
           <Routes>
@@ -131,6 +133,7 @@ export default function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      </ToastProvider>
     </QueryClientProvider>
   )
 }

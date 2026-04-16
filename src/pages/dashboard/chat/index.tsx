@@ -4,7 +4,6 @@ import { Send, Bot, BookOpen, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/layout/page-header'
 import { Spinner } from '@/components/ui/spinner'
-import { Badge } from '@/components/ui/badge'
 import api from '@/lib/api'
 
 interface Source {

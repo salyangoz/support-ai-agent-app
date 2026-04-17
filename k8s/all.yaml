@@ -45,3 +45,53 @@ spec:
               port: 80
             initialDelaySeconds: 3
             periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: support-ai-app
+spec:
+  type: ClusterIP
+  selector:
+    app: support-ai-app
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: support.yengec.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: support-ai-app
+                port:
+                  number: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: support-ai-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: support-ai-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

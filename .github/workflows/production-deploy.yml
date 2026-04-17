@@ -56,7 +56,7 @@ jobs:
   deploy:
     needs:
       - build-image
-    runs-on: backend-runner
+    runs-on: app-runner
     steps:
       - name: Sync Docker Hub pull secret
         run: |

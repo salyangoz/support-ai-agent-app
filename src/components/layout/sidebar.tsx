@@ -9,7 +9,6 @@ import {
   FileText,
   UserCircle,
   MessageCircle,
-  LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/context/auth-context'
@@ -28,6 +27,15 @@ const settingsNav = [
   { to: 'users', icon: Users, label: 'Users', roles: ['owner', 'admin'] },
   { to: 'settings', icon: Settings, label: 'Settings', roles: ['owner', 'admin'] },
 ]
+
+function getInitials(nameOrEmail: string): string {
+  const source = nameOrEmail.trim()
+  if (source.includes('@')) return source[0]?.toUpperCase() ?? '?'
+  const parts = source.split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return '?'
+  if (parts.length === 1) return parts[0]![0]!.toUpperCase()
+  return (parts[0]![0]! + parts[parts.length - 1]![0]!).toUpperCase()
+}
 
 export function Sidebar() {
   const { tenantId } = useParams()
@@ -103,19 +111,24 @@ export function Sidebar() {
       )}
 
       {user && (
-        <div className="flex items-center gap-2 border-t border-sidebar-border px-3 py-3">
+        <div className="flex items-center gap-2.5 border-t border-sidebar-border px-4 py-3">
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff1ea] text-[12px] font-bold text-[#f33c42]"
+            title={user.email}
+          >
+            {getInitials(user.name || user.email)}
+          </span>
           <div className="min-w-0 flex-1">
             <div className="truncate text-[13px] font-medium text-sidebar-foreground" title={user.email}>
-              {user.email}
+              {user.name || user.email}
             </div>
+            <button
+              onClick={logout}
+              className="cursor-pointer text-[11px] font-medium text-muted-foreground underline underline-offset-2 transition-colors hover:text-[#f33c42]"
+            >
+              Log out
+            </button>
           </div>
-          <button
-            onClick={logout}
-            title="Logout"
-            className="flex items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-          </button>
         </div>
       )}
     </aside>

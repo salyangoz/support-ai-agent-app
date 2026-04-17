@@ -54,8 +54,6 @@ export const APP_CATALOG: Record<string, AppDefinition> = {
     category: 'knowledge',
     credentials: [
       { key: 'token', label: 'Personal Access Token', placeholder: 'ghp_...', type: 'password', required: true, helpText: 'Needs read access to the repository contents' },
-    ],
-    configFields: [
       { key: 'owner', label: 'Repository Owner', placeholder: 'myorg', type: 'text', required: true },
       { key: 'repo', label: 'Repository Name', placeholder: 'docs', type: 'text', required: true },
       { key: 'path', label: 'Path', placeholder: 'guides/', type: 'text', required: true, helpText: 'Directory path to scan for .md files' },
@@ -71,9 +69,10 @@ export const APP_CATALOG: Record<string, AppDefinition> = {
     type: 'knowledge',
     role: 'source',
     category: 'knowledge',
-    credentials: [],
-    configFields: [
+    credentials: [
       { key: 'url', label: 'Start URL', placeholder: 'https://docs.example.com', type: 'text', required: true, helpText: 'The starting URL to crawl from' },
+    ],
+    configFields: [
       { key: 'selector', label: 'CSS Selector', placeholder: 'article, main, .content', type: 'text', helpText: 'CSS selector for content extraction. Defaults to article, main, .content' },
       { key: 'max_pages', label: 'Max Pages', placeholder: '50', type: 'text', helpText: 'Maximum number of pages to crawl (default 50, max 200)' },
     ],
@@ -89,9 +88,9 @@ export const APP_CATALOG: Record<string, AppDefinition> = {
     category: 'knowledge',
     credentials: [
       { key: 'botToken', label: 'Bot Token', placeholder: 'xoxb-...', type: 'password', required: true, helpText: 'Slack Bot OAuth token with channels:history and channels:read scopes' },
+      { key: 'channel_ids', label: 'Channel IDs', placeholder: 'C01ABC123, C02DEF456', type: 'text', required: true, helpText: 'Comma-separated Slack channel IDs to monitor' },
     ],
     configFields: [
-      { key: 'channel_ids', label: 'Channel IDs', placeholder: 'C01ABC123, C02DEF456', type: 'text', required: true, helpText: 'Comma-separated Slack channel IDs to monitor' },
       { key: 'min_replies', label: 'Min Replies', placeholder: '2', type: 'text', helpText: 'Minimum replies in a thread to include (default 2)' },
       { key: 'lookback_days', label: 'Lookback Days', placeholder: '30', type: 'text', helpText: 'How many days back to search for threads (default 30)' },
     ],

@@ -9,6 +9,7 @@ import {
   FileText,
   UserCircle,
   MessageCircle,
+  Phone,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/context/auth-context'
@@ -19,6 +20,7 @@ const mainNav = [
   { to: 'tickets', icon: Ticket, label: 'Tickets' },
   { to: 'customers', icon: UserCircle, label: 'Customers' },
   { to: 'knowledge', icon: BookOpen, label: 'Knowledge Base' },
+  { to: 'voice', icon: Phone, label: 'Voice' },
   { to: 'drafts', icon: FileText, label: 'Drafts' },
   { to: 'chat', icon: MessageCircle, label: 'Chat' },
 ]

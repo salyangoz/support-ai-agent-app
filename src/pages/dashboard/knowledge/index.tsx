@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { Plus, Pencil, Trash2, Zap, Loader2, Sparkles } from 'lucide-react'
+import { Plus, Pencil, Trash2, Zap, Loader2, Sparkles, Mic } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,17 @@ import type { KnowledgeArticle, PaginatedResponse, EmbeddingStatus } from '@/typ
 import KnowledgeArticleModal from './article-modal'
 
 const PAGE_SIZE = 20
+
+function formatVoiceDuration(metadata: unknown): string | null {
+  const m = metadata as Record<string, unknown> | undefined
+  const seconds = m?.duration_seconds
+  if (typeof seconds !== 'number' || !Number.isFinite(seconds)) return null
+  const whole = Math.max(0, Math.floor(seconds))
+  const min = Math.floor(whole / 60)
+  const sec = whole % 60
+  if (min === 0) return `${sec}s`
+  return `${min}m ${sec}s`
+}
 
 function EmbeddingBadge({ status }: { status?: EmbeddingStatus }) {
   if (!status || status.total_chunks === 0) {
@@ -164,7 +175,22 @@ export default function KnowledgeBasePage() {
                     article.embedding_status.embedded_chunks === article.embedding_status.total_chunks
                   return (
                     <tr key={article.id} className="border-b last:border-0 hover:bg-muted/30">
-                      <td className="px-4 py-3 font-medium">{article.title}</td>
+                      <td className="px-4 py-3 font-medium">
+                        <div className="flex items-center gap-2">
+                          <span>{article.title}</span>
+                          {article.source_type === 'voice' && (
+                            <Badge variant="secondary" className="text-xs">
+                              <Mic className="h-3 w-3 mr-1" />
+                              Voice{formatVoiceDuration(article.metadata) ? ` · ${formatVoiceDuration(article.metadata)}` : ''}
+                            </Badge>
+                          )}
+                        </div>
+                        {article.source_type === 'voice' && (article.metadata as Record<string, string> | undefined)?.customer_name && (
+                          <div className="text-xs text-muted-foreground mt-0.5">
+                            {(article.metadata as Record<string, string>).customer_name}
+                          </div>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-muted-foreground">{article.category ?? '-'}</td>
                       <td className="px-4 py-3">
                         <Badge variant={article.is_active ? 'success' : 'secondary'}>

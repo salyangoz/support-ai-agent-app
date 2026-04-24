@@ -108,8 +108,6 @@ export default function AppsPage() {
 
   if (isLoading) return <div className="flex justify-center p-12"><Spinner /></div>
 
-  const connectedCodes = new Set(appList.map((a) => a.code))
-
   return (
     <div>
       <PageHeader title="Apps" description="Connect your tools to power your AI support agent" />
@@ -162,7 +160,6 @@ export default function AppsPage() {
             <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{category.label}</h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {categoryApps.map((def) => {
-                const isConnected = connectedCodes.has(def.code)
                 return (
                   <div key={def.code} className={`flex items-center gap-3 rounded-[14px] border bg-card px-4 py-3 ${def.comingSoon ? 'opacity-50' : ''}`}>
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]" style={{ backgroundColor: `${def.color}15` }}>
@@ -175,13 +172,9 @@ export default function AppsPage() {
                     <div className="shrink-0">
                       {def.comingSoon ? (
                         <span className="text-xs text-muted-foreground">Soon</span>
-                      ) : isConnected ? (
-                        <Link to={`/t/${tenantId}/apps/new?code=${def.code}`}>
-                          <Button variant="outline" size="sm"><Plus className="mr-1.5 h-3 w-3" /> Add</Button>
-                        </Link>
                       ) : (
                         <Link to={`/t/${tenantId}/apps/new?code=${def.code}`}>
-                          <Button size="sm">Connect</Button>
+                          <Button variant="outline" size="sm"><Plus className="mr-1.5 h-3 w-3" /> Add</Button>
                         </Link>
                       )}
                     </div>

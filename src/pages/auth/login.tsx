@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/context/auth-context'
 import { Button } from '@/components/ui/button'
@@ -14,8 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError('')
     setLoading(true)
     try {
@@ -37,7 +36,7 @@ export default function LoginPage() {
           </CardTitle>
           <CardDescription>Sign in to manage your support agent</CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <div>
           <CardContent className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
@@ -61,12 +60,18 @@ export default function LoginPage() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    void handleSubmit()
+                  }
+                }}
                 required
               />
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-3">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="button" className="w-full" disabled={loading} onClick={() => void handleSubmit()}>
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
             <p className="text-sm text-muted-foreground">
@@ -76,7 +81,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </CardFooter>
-        </form>
+        </div>
       </Card>
     </div>
   )

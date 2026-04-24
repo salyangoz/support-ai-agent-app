@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,8 +15,7 @@ export default function RegisterPage() {
 
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }))
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError('')
     setLoading(true)
     try {
@@ -39,7 +38,7 @@ export default function RegisterPage() {
           </CardTitle>
           <CardDescription>Sign up and start managing your AI support agent</CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <div>
           <CardContent className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
@@ -73,13 +72,19 @@ export default function RegisterPage() {
                 placeholder="Min 8 characters"
                 value={form.password}
                 onChange={(e) => update('password', e.target.value)}
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    void handleSubmit()
+                  }
+                }}
                 required
                 minLength={8}
               />
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-3">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="button" className="w-full" disabled={loading} onClick={() => void handleSubmit()}>
               {loading ? 'Creating account...' : 'Create account'}
             </Button>
             <p className="text-sm text-muted-foreground">
@@ -89,7 +94,7 @@ export default function RegisterPage() {
               </Link>
             </p>
           </CardFooter>
-        </form>
+        </div>
       </Card>
     </div>
   )

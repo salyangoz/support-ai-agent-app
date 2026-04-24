@@ -25,6 +25,7 @@ export interface TenantSettings {
   auto_generate_kb?: boolean
   max_context_tokens?: number
   sync_lookback_minutes?: number
+  draft_debounce_seconds?: number
   output_app_ids?: string[]
 }
 
@@ -55,7 +56,7 @@ export interface App {
   id: string
   tenant_id: string
   code: string
-  type: 'ticket' | 'knowledge' | 'notification'
+  type: 'ticket' | 'knowledge' | 'notification' | 'voice' | 'transcription'
   role: 'source' | 'destination' | 'both'
   name: string | null
   credentials: Record<string, string>
@@ -164,10 +165,38 @@ export interface KnowledgeArticle {
   content: string
   category: string | null
   language: string | null
+  source_type: 'text' | 'voice'
+  metadata: Record<string, unknown>
   is_active: boolean
   embedding_status?: EmbeddingStatus
   created_at: string
   updated_at: string
+}
+
+export type TranscriptionStatus = 'pending' | 'transcribing' | 'done' | 'failed'
+
+export interface VoiceRecording {
+  id: string
+  tenant_id: string
+  source_app_id: string
+  external_id: string
+  audio_url: string | null
+  mime_type: string | null
+  duration_seconds: number | null
+  language: string | null
+  caller: string | null
+  callee: string | null
+  direction: 'inbound' | 'outbound' | null
+  customer_id: string | null
+  customer?: Customer
+  transcription_status: TranscriptionStatus
+  transcription_error: string | null
+  transcription_attempts: number
+  article_id: string | null
+  metadata: Record<string, unknown>
+  recorded_at: string | null
+  transcribed_at: string | null
+  created_at: string
 }
 
 export interface AuthTokens {

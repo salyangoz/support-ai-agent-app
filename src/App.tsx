@@ -13,6 +13,7 @@ import AppFormPage from '@/pages/dashboard/apps/app-form'
 import TicketsPage from '@/pages/dashboard/tickets/index'
 import TicketDetailPage from '@/pages/dashboard/tickets/ticket-detail'
 import KnowledgeBasePage from '@/pages/dashboard/knowledge/index'
+import VoiceRecordingsPage from '@/pages/dashboard/voice/index'
 import CustomersPage from '@/pages/dashboard/customers/index'
 import DraftsPage from '@/pages/dashboard/drafts/index'
 import UsersPage from '@/pages/dashboard/users/index'
@@ -122,6 +123,7 @@ export default function App() {
               <Route path="tickets" element={<TicketsPage />} />
               <Route path="tickets/:ticketId" element={<TicketDetailPage />} />
               <Route path="knowledge" element={<KnowledgeBasePage />} />
+              <Route path="voice" element={<VoiceRecordingsPage />} />
               <Route path="customers" element={<CustomersPage />} />
               <Route path="drafts" element={<DraftsPage />} />
               <Route path="users" element={<UsersPage />} />

@@ -68,3 +68,16 @@ jobs:
 
       - name: Rollout app
         run: kubectl rollout restart deployment/support-ai-app
+
+      - name: Slack Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: Support AI Agent — Frontend deploy
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_USERNAME: GitHub Actions
+          SLACK_MESSAGE: |
+            Frontend uygulaması canlıya alındı!
+            Durum: ${{ job.status }}
+            Commit: ${{ github.event.head_commit.message }}

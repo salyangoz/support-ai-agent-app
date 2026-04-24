@@ -1,4 +1,4 @@
-import { MessageSquare, GitBranch, Globe, Hash, BookOpen } from 'lucide-react'
+import { MessageSquare, GitBranch, Globe, Hash, BookOpen, Phone, Mic } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface CredentialField {
@@ -16,9 +16,9 @@ export interface AppDefinition {
   description: string
   icon: LucideIcon
   color: string
-  type: 'ticket' | 'knowledge'
+  type: 'ticket' | 'knowledge' | 'voice' | 'transcription'
   role: 'source' | 'destination' | 'both'
-  category: 'ticket' | 'knowledge'
+  category: 'ticket' | 'knowledge' | 'voice'
   credentials: CredentialField[]
   configFields?: CredentialField[]
   comingSoon?: boolean
@@ -95,6 +95,42 @@ export const APP_CATALOG: Record<string, AppDefinition> = {
       { key: 'lookback_days', label: 'Lookback Days', placeholder: '30', type: 'text', helpText: 'How many days back to search for threads (default 30)' },
     ],
   },
+  verimor: {
+    code: 'verimor',
+    name: 'Verimor',
+    description: 'Import call recordings from Verimor IVR/telephony',
+    icon: Phone,
+    color: '#c41e3a',
+    type: 'voice',
+    role: 'source',
+    category: 'voice',
+    credentials: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Verimor API key', type: 'password', required: true, helpText: 'Find it under your Verimor / Bulutsantralim account settings' },
+    ],
+    configFields: [
+      { key: 'min_duration_seconds', label: 'Minimum duration (s)', placeholder: '5', type: 'text', helpText: 'Skip recordings shorter than this many seconds (default 5)' },
+      { key: 'max_recordings', label: 'Max recordings per sync', placeholder: '100', type: 'text', helpText: 'Upper bound on recordings pulled in one sync (default 100)' },
+    ],
+  },
+  gladia: {
+    code: 'gladia',
+    name: 'Gladia',
+    description: 'Transcribe voice recordings into text with speaker diarization',
+    icon: Mic,
+    color: '#7c3aed',
+    type: 'transcription',
+    role: 'source',
+    category: 'voice',
+    credentials: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Gladia API key', type: 'password', required: true, helpText: 'Get one at https://app.gladia.io/account' },
+    ],
+    configFields: [
+      { key: 'default_language', label: 'Default language', placeholder: 'tr', type: 'text', helpText: 'BCP-47 code (tr, en, de…). Ignored when auto-detect is on.' },
+      { key: 'detect_language', label: 'Auto-detect language', placeholder: '', type: 'checkbox', helpText: 'Let Gladia detect the spoken language' },
+      { key: 'diarization', label: 'Speaker diarization', placeholder: '', type: 'checkbox', helpText: 'Split the transcript by speaker' },
+      { key: 'summarization', label: 'Generate summary', placeholder: '', type: 'checkbox', helpText: 'Ask Gladia for a short summary (stored in metadata)' },
+    ],
+  },
 }
 
 export const APP_CATEGORIES = [
@@ -109,6 +145,12 @@ export const APP_CATEGORIES = [
     label: 'Knowledge Base',
     description: 'Sync content sources to power AI-generated responses',
     icon: BookOpen,
+  },
+  {
+    key: 'voice' as const,
+    label: 'Voice',
+    description: 'Capture call recordings and transcribe them into the knowledge base',
+    icon: Phone,
   },
 ] as const
 

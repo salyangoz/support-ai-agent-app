@@ -132,6 +132,7 @@ export default function SettingsPage() {
       settings: {
         max_context_tokens: settings.max_context_tokens ?? 4000,
         sync_lookback_minutes: settings.sync_lookback_minutes ?? 10,
+        draft_debounce_seconds: settings.draft_debounce_seconds ?? 60,
       },
     })
   }
@@ -427,6 +428,17 @@ export default function SettingsPage() {
                       onChange={(e) => updateSetting('sync_lookback_minutes', Number(e.target.value))}
                     />
                     <p className="text-xs text-muted-foreground">Polling window for ticket sync</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="draft_debounce_seconds">Draft Debounce (sec)</Label>
+                    <Input
+                      id="draft_debounce_seconds"
+                      type="number"
+                      min={0}
+                      value={settings.draft_debounce_seconds ?? 60}
+                      onChange={(e) => updateSetting('draft_debounce_seconds', Number(e.target.value))}
+                    />
+                    <p className="text-xs text-muted-foreground">Wait after last customer message before drafting</p>
                   </div>
                 </div>
                 <div className="pt-2">

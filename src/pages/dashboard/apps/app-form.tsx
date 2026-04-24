@@ -61,6 +61,8 @@ function CredentialField({ field, value, onChange, isEdit }: {
 const appRoles: Record<string, string[]> = {
   ticket: ['source', 'destination', 'both'],
   knowledge: ['source'],
+  voice: ['source'],
+  transcription: ['source'],
 }
 
 export default function AppFormPage() {
@@ -120,10 +122,12 @@ export default function AppFormPage() {
     }
   }, [existingApp])
 
-  const saveApp = (data: Record<string, unknown>) =>
-    isEdit
-      ? api.put(`/tenants/${tenantId}/apps/${appId}`, data).then((r) => r.data as App)
+  const saveApp = (data: Record<string, unknown>) => {
+    const existingId = appId ?? savedAppId
+    return existingId
+      ? api.put(`/tenants/${tenantId}/apps/${existingId}`, data).then((r) => r.data as App)
       : api.post(`/tenants/${tenantId}/apps`, data).then((r) => r.data as App)
+  }
 
   const credentialsMutation = useMutation({
     mutationFn: (data: Record<string, unknown>) => saveApp(data),
@@ -131,7 +135,12 @@ export default function AppFormPage() {
       queryClient.invalidateQueries({ queryKey: ['apps', tenantId] })
       const id = app?.id ?? savedAppId
       if (!id) { navigate(`/t/${tenantId}/apps`); return }
-      setSavedAppId(id)
+      if (id !== appId) {
+        setSavedAppId(id)
+        // Move to the edit URL so refresh / reuse of "back" works and
+        // future saves go through PUT regardless of local React state.
+        navigate(`/t/${tenantId}/apps/${id}`, { replace: true })
+      }
       setTestStatus('testing')
       setTestError('')
       try {
